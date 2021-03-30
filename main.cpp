@@ -5,6 +5,7 @@
 #include <signal.h>
 #include <conio.h>
 #include <iostream>
+#include <string>
 using namespace std;
 
 char command_buf[500];
@@ -71,8 +72,8 @@ void help() {
     printf("KILL 'ID'   Kill or stop a running process\n");
     printf("DATE    Displays or sets the date\n");
     printf("CALC    Open system calculator\n");
-    printf("LIST    Displays list of commands");
-    printf("HELP    ");
+    printf("LIST    Displays list of commands\n");
+    printf("HELP    Provides Help information for Windows commands\n");
 }
 
 int main(){
@@ -111,6 +112,20 @@ int main(){
         else if (!strcmp(command_buf, "sh")){
             scanf("%s", &command_buf);
             system(command_buf);
+        }
+        else if(!strcmp(command_buf, "help")) {
+            help();
+        }
+        else if(!strcmp(command_buf, "dir")) {
+            system("dir");
+        }
+        else if(!strcmp(command_buf, "cd")) {
+            scanf("%s", &command_buf);
+            if (!strcmp(command_buf, ""))
+            system("cd ..");
+        }
+        else if(!strcmp(command_buf, "cls")) {
+            system("cls");
         }
         signal(SIGINT, sigint);
 	}
