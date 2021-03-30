@@ -6,10 +6,11 @@
 #include <conio.h>
 #include <iostream>
 #include <string>
+#include <unistd.h>
 using namespace std;
 
+char s[100];
 char command_buf[500];
-
 char key;
 STARTUPINFO si[100];
 PROCESS_INFORMATION  pi[100];
@@ -55,7 +56,6 @@ void calc(){
 void exit_process(){
     printf("Sending signal to kill all child processes ...\n");
     kill_all();
-
 }
 void sigint(int a){   
     printf("Killing foreground process ... \n");
@@ -74,17 +74,24 @@ void help() {
     printf("CALC    Open system calculator\n");
     printf("LIST    Displays list of commands\n");
     printf("HELP    Provides Help information for Windows commands\n");
+    printf("CLS 	Clear tiny shell\n");
+    printf("CD		Change current directory\n");
 }
 
 int main(){
     
 	while(1) 
 	{
-		printf("testcli>  ");
+		printf("%s>", getcwd(s, 100));
         //if (!fgets(command_buf, 128, stdin)) break;
-        scanf("%s", &command_buf);
-		if(!strcmp(command_buf, "ifconfig")) { system("ifconfig"); }
-		else if(!strcmp(command_buf, "date")) { system("date"); }
+        fflush(stdin);
+        gets(command_buf);
+		if(!strcmp(command_buf, "ifconfig")) { 
+			system("ifconfig"); 
+		}
+		else if(!strcmp(command_buf, "date")) { 
+			system("date"); 
+		}
 		else if(!strcmp(command_buf, "exit") || !strcmp(command_buf, "quit") || !strcmp(command_buf, "e") || !strcmp(command_buf, "q")) {
             exit_process();
             return 0;
@@ -119,10 +126,13 @@ int main(){
         else if(!strcmp(command_buf, "dir")) {
             system("dir");
         }
-        else if(!strcmp(command_buf, "cd")) {
-            scanf("%s", &command_buf);
-            if (!strcmp(command_buf, ""))
-            system("cd ..");
+        else if(!strcmp(command_buf, "cd..")) {
+            chdir("..");
+        }
+        else if((command_buf[0]==99)&&(command_buf[1]==100)&&(command_buf[2]==' ')) {
+            char s[50];
+            for(int i=3;i<=strlen(command_buf);i++) s[i-3]=command_buf[i];
+			if(chdir(s)) printf("No such file or directory\n");        
         }
         else if(!strcmp(command_buf, "cls")) {
             system("cls");
