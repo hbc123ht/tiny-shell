@@ -7,10 +7,13 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <dirent.h>
+#define GetCurrentDir getcwd
+#define GetCurrentDir getcwd
 using namespace std;
 
-char s[100];
 char command_buf[500];
+
 char key;
 STARTUPINFO si[100];
 PROCESS_INFORMATION  pi[100];
@@ -78,14 +81,21 @@ void help() {
     printf("CD		Change current directory\n");
 }
 
+std::string get_current_dir() {
+	char buff[FILENAME_MAX]; //create string buffer to hold path
+	GetCurrentDir( buff, FILENAME_MAX);
+	string current_working_dir(buff);
+	return current_working_dir;
+}
+
 int main(){
     
 	while(1) 
 	{
-		printf("%s>", getcwd(s, 100));
         //if (!fgets(command_buf, 128, stdin)) break;
-        fflush(stdin);
-        gets(command_buf);
+        cout << get_current_dir() << ">";
+        scanf("%s", &command_buf);
+
 		if(!strcmp(command_buf, "ifconfig")) { 
 			system("ifconfig"); 
 		}
@@ -127,14 +137,14 @@ int main(){
             system("dir");
         }
         else if(!strcmp(command_buf, "cd..")) {
-            chdir("..");
+        	chdir("..");
+		}
+        else if(!strcmp(command_buf, "cd")) {
+            chdir(command_buf);
+			scanf("%s", &command_buf);
+			if(chdir(command_buf)) printf("No such file or directory\n");
         }
-        else if((command_buf[0]==99)&&(command_buf[1]==100)&&(command_buf[2]==' ')) {
-            char s[50];
-            for(int i=3;i<=strlen(command_buf);i++) s[i-3]=command_buf[i];
-			if(chdir(s)) printf("No such file or directory\n");        
-        }
-        else if(!strcmp(command_buf, "cls")) {
+        else if(!strcmp(command_buf, "clear")) {
             system("cls");
         }
         signal(SIGINT, sigint);
