@@ -8,6 +8,8 @@
 #include <string>
 #include <unistd.h>
 #include <dirent.h>
+#include <process.h>
+#include <dos.h>
 #define GetCurrentDir getcwd
 #define GetCurrentDir getcwd
 using namespace std;
@@ -70,15 +72,15 @@ void sigint(int a){
 
 void help() {
     // Display all commands
-    printf("For more information on a specific command, type HELP command-name\n");
-    printf("KILL -1    Kill or stop all running processes\n");
-    printf("KILL 'ID'   Kill or stop a running process\n");
-    printf("DATE    Displays or sets the date\n");
-    printf("CALC    Open system calculator\n");
-    printf("LIST    Displays list of commands\n");
-    printf("HELP    Provides Help information for Windows commands\n");
-    printf("CLS 	Clear tiny shell\n");
+    printf("KILL -1    	Kill or stop all running processes\n");
+    printf("KILL 'ID'   	Kill or stop a running process\n");
+    printf("DATE    	Displays or sets the date\n");
+    printf("CALC    	Open system calculator\n");
+    printf("LIST    	Displays list of commands\n");
+    printf("HELP    	Provides Help information for Windows commands\n");
+    printf("CLS 		Clear tiny shell\n");
     printf("CD		Change current directory\n");
+    printf("BAT		Running a batch file\n");
 }
 
 std::string get_current_dir() {
@@ -147,6 +149,10 @@ int main(){
         else if(!strcmp(command_buf, "clear")) {
             system("cls");
         }
+        else if(!strcmp(command_buf, "bat")) {
+			scanf("%s", &command_buf);
+			system(command_buf);	
+		}
         signal(SIGINT, sigint);
 	}
 }
