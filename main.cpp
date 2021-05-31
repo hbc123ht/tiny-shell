@@ -98,15 +98,15 @@ int main(){
         cout << get_current_dir() << ">";
         scanf("%s", &command_buf);
 
-		if(!strcmp(command_buf, "ifconfig")) { 
-			system("ifconfig"); 
-		}
-		else if(!strcmp(command_buf, "date")) { 
-			system("date"); 
-		}
-		else if(!strcmp(command_buf, "exit") || !strcmp(command_buf, "quit") || !strcmp(command_buf, "e") || !strcmp(command_buf, "q")) {
+	if(!strcmp(command_buf, "ifconfig")) { 
+		system("ifconfig"); 
+	}
+	else if(!strcmp(command_buf, "date")) { 
+		system("date"); 
+	}
+	else if(!strcmp(command_buf, "exit") || !strcmp(command_buf, "quit") || !strcmp(command_buf, "e") || !strcmp(command_buf, "q")) {
             exit_process();
-            return 0;
+        return 0;
         }
 		else if(!strcmp(command_buf, "child")) {
             child();
@@ -139,20 +139,21 @@ int main(){
             system("dir");
         }
         else if(!strcmp(command_buf, "cd..")) {
-        	chdir("..");
-		}
+            chdir("..");
+	}
         else if(!strcmp(command_buf, "cd")) {
             chdir(command_buf);
-			scanf("%s", &command_buf);
-			if(chdir(command_buf)) printf("No such file or directory\n");
+	    scanf("%s", &command_buf);
+	    if(chdir(command_buf)) 
+		    printf("No such file or directory\n");
         }
         else if(!strcmp(command_buf, "clear")) {
             system("cls");
         }
         else if(!strcmp(command_buf, "bat")) {
-			scanf("%s", &command_buf);
-			system(command_buf);	
-		}
+		scanf("%s", &command_buf);
+		system(command_buf);	
+	}
         signal(SIGINT, sigint);
 	}
 }
