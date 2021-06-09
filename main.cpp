@@ -76,6 +76,7 @@ void help() {
     printf("KILL 'ID'   	Kill or stop a running process\n");
     printf("DATE    	Displays or sets the date\n");
     printf("NOTEPAD    	Open system notepad\n");
+    printf("CALC    	Open system calculator\n");
     printf("LIST    	Displays list of commands\n");
     printf("HELP    	Provides Help information for Windows commands\n");
     printf("CLS 		Clear tiny shell\n");
@@ -98,15 +99,15 @@ int main(){
         cout << get_current_dir() << ">";
         scanf("%s", &command_buf);
 
-		if(!strcmp(command_buf, "ifconfig")) { 
-			system("ifconfig"); 
-		}
-		else if(!strcmp(command_buf, "date")) { 
-			system("date"); 
-		}
-		else if(!strcmp(command_buf, "exit") || !strcmp(command_buf, "quit") || !strcmp(command_buf, "e") || !strcmp(command_buf, "q")) {
+	if(!strcmp(command_buf, "ifconfig")) { 
+		system("ifconfig"); 
+	}
+	else if(!strcmp(command_buf, "date")) { 
+		system("date"); 
+	}
+	else if(!strcmp(command_buf, "exit") || !strcmp(command_buf, "quit") || !strcmp(command_buf, "e") || !strcmp(command_buf, "q")) {
             exit_process();
-            return 0;
+        return 0;
         }
 		else if(!strcmp(command_buf, "child")) {
             child();
@@ -139,12 +140,13 @@ int main(){
             system("dir");
         }
         else if(!strcmp(command_buf, "cd..")) {
-        	chdir("..");
-		}
+            chdir("..");
+	}
         else if(!strcmp(command_buf, "cd")) {
             chdir(command_buf);
-			scanf("%s", &command_buf);
-			if(chdir(command_buf)) printf("No such file or directory\n");
+	    scanf("%s", &command_buf);
+	    if(chdir(command_buf)) 
+		    printf("No such file or directory\n");
         }
         else if(!strcmp(command_buf, "clear")) {
             system("cls");
@@ -156,6 +158,6 @@ int main(){
 			system(command);
 			system("taskkill /F /IM cmd.exe >NUL 2> 1");
 		}
-        signal(SIGINT, sigint);
 	}
+        signal(SIGINT, sigint);
 }
