@@ -19,6 +19,7 @@ char command_buf[500];
 char key;
 STARTUPINFO si[100];
 PROCESS_INFORMATION  pi[100];
+string pro[100];
 int n, background_mode = 1;
 
 void kill_all(){
@@ -32,7 +33,7 @@ void kill(int id){
     for (int i = 1;i <= n; i++){
         if (id == pi[i].dwProcessId){
             TerminateProcess(pi[i].hProcess, 1);CloseHandle(pi[i].hProcess);CloseHandle(pi[i].hThread);
-            for (int j = i; j < n; j++) pi[j] = pi[j + 1], si[j] = si[j + 1];
+            for (int j = i; j < n; j++) pi[j] = pi[j + 1], si[j] = si[j + 1], pro[j] = pro[j + 1];
             n--;
             break;
         }
@@ -42,19 +43,32 @@ void child(){
     ++n;
     ZeroMemory(&si[n], sizeof(si[n]));
     si[n].cb = sizeof(si[n]);
+    pro[n] = "Child";
     CreateProcess("child.exe",NULL,NULL,NULL,FALSE,CREATE_NEW_CONSOLE,NULL,NULL,&si[n],&pi[n]);
     if (background_mode == 1) return;
     WaitForSingleObject(pi[n].hProcess,10000);
 }
 void list(){
     for (int i = 1;i <= n; i++)
-        printf("%d %p %s\n", pi[i].dwProcessId, pi[i].hProcess, si[i].wShowWindow);
+        printf("%d %p %s %s\n", pi[i].dwProcessId, pi[i].hProcess, si[i].wShowWindow, "fdsfsdfsd");
 }
 void notepad(){
     ++n;
     ZeroMemory(&si[n], sizeof(si[n]));
     si[n].cb = sizeof(si[n]);
+    pro[n] = "Notepad";
     CreateProcess("C:\\Windows\\System32\\notepad.exe",NULL,NULL,NULL,FALSE,CREATE_NEW_CONSOLE,NULL,NULL,&si[n],&pi[n]);
+    if (background_mode == 1) return;
+    WaitForSingleObject(pi[n].hProcess,10000);
+}
+void run(string exe){
+	++n;
+    ZeroMemory(&si[n], sizeof(si[n]));
+    pro[n] = exe;
+    si[n].cb = sizeof(si[n]);
+    LPCTSTR path = (LPCTSTR)exe.c_str();
+    
+	CreateProcess(path,NULL,NULL,NULL,FALSE,CREATE_NEW_CONSOLE,NULL,NULL,&si[n],&pi[n]);
     if (background_mode == 1) return;
     WaitForSingleObject(pi[n].hProcess,10000);
 }
@@ -136,7 +150,7 @@ int main(){
         else if(!strcmp(command_buf, "help")) {
             help();
         }
-        else if(!strcmp(command_buf, "dir")) {
+        else if(!strcmp(command_buf, "ls")) {
             system("dir");
         }
         else if(!strcmp(command_buf, "cd..")) {
@@ -151,6 +165,10 @@ int main(){
         else if(!strcmp(command_buf, "clear")) {
             system("cls");
         }
+		else if(!strcmp(command_buf, "run")) {
+			scanf("%s", &command_buf);
+            run(command_buf);
+        }
         else if(!strcmp(command_buf, "bat")) {
 			scanf("%s", &command_buf);
 			char command[] = "start ";
@@ -158,6 +176,7 @@ int main(){
 			system(command);
 			system("taskkill /F /IM cmd.exe >NUL 2> 1");
 		}
+		
 	}
         signal(SIGINT, sigint);
 }
